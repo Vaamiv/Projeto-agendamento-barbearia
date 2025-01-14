@@ -1,79 +1,205 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <title>Agendamento de Barbearia</title>
 </head>
+
 <body>
 
-    <h1>Agendamento de Serviços</h1>
+    <div class="container">
+        <h2>Escolha o Serviço</h2>
 
-    <!-- Tela de seleção de serviços -->
-    <div id="services-container">
-        <h2>Escolha um Serviço</h2>
-        <div class="service-card" onclick="selectService('Barba', 'barba.jpg', 30)">
-            <img src="{{ url_for('static', filename='barba.jpg') }}" alt="Barba">
-            <div>
+        <!-- Card 1 - Barba -->
+        <div class="service-card" onclick="chooseService('barba', '30,00', 'images/barba.jpg')">
+            <div class="service-image">
+                <img src="{{ url_for('static', filename='images/barba.jpg') }}" alt="Barba">
+            </div>
+            <div class="service-info">
                 <h3>Barba</h3>
-                <p>R$30,00</p>
+                <p>Barba feita com todo cuidado.</p>
             </div>
+            <div class="price">R$ 30,00</div>
         </div>
-        <div class="service-card" onclick="selectService('Cabelo', 'cabelo.jpg', 50)">
-            <img src="{{ url_for('static', filename='cabelo.jpg') }}" alt="Cabelo">
-            <div>
+
+        <!-- Card 2 - Cabelo -->
+        <div class="service-card" onclick="chooseService('cabelo', '40,00', 'images/cabelo.jpg')">
+            <div class="service-image">
+                <img src="{{ url_for('static', filename='images/cabelo.jpg') }}" alt="Cabelo">
+            </div>
+            <div class="service-info">
                 <h3>Cabelo</h3>
-                <p>R$50,00</p>
+                <p>Corte de cabelo com estilo.</p>
             </div>
+            <div class="price">R$ 40,00</div>
         </div>
-        <div class="service-card" onclick="selectService('Cabelo + Barba', 'cabelo_barba.jpg', 70)">
-            <img src="{{ url_for('static', filename='cabelo_barba.jpg') }}" alt="Cabelo + Barba">
-            <div>
+
+        <!-- Card 3 - Cabelo + Barba -->
+        <div class="service-card" onclick="chooseService('cabelo_barba', '60,00', 'images/cabelo_barba.jpg')">
+            <div class="service-image">
+                <img src="{{ url_for('static', filename='images/cabelo_barba.jpg') }}" alt="Cabelo + Barba">
+            </div>
+            <div class="service-info">
                 <h3>Cabelo + Barba</h3>
-                <p>R$70,00</p>
+                <p>O pacote completo.</p>
             </div>
+            <div class="price">R$ 60,00</div>
         </div>
-        <div class="service-card" onclick="selectService('Sobrancelha', 'sobrancelha.jpg', 20)">
-            <img src="{{ url_for('static', filename='sobrancelha.jpg') }}" alt="Sobrancelha">
-            <div>
+
+        <!-- Card 4 - Sobrancelha -->
+        <div class="service-card" onclick="chooseService('sobrancelha', '20,00', 'images/sobrancelha.jpg')">
+            <div class="service-image">
+                <img src="{{ url_for('static', filename='images/sobrancelha.jpg') }}" alt="Sobrancelha">
+            </div>
+            <div class="service-info">
                 <h3>Sobrancelha</h3>
-                <p>R$20,00</p>
+                <p>Design de sobrancelha preciso.</p>
             </div>
+            <div class="price">R$ 20,00</div>
         </div>
-        <div class="service-card" onclick="selectService('Serviço Completo', 'servico_completo.jpg', 100)">
-            <img src="{{ url_for('static', filename='servico_completo.jpg') }}" alt="Serviço Completo">
-            <div>
+
+        <!-- Card 5 - Serviço Completo -->
+        <div class="service-card" onclick="chooseService('completo', '100,00', 'images/completo.jpg')">
+            <div class="service-image">
+                <img src="{{ url_for('static', filename='images/completo.jpg') }}" alt="Serviço Completo">
+            </div>
+            <div class="service-info">
                 <h3>Serviço Completo</h3>
-                <p>R$100,00</p>
+                <p>Barba, cabelo e sobrancelha.</p>
             </div>
+            <div class="price">R$ 100,00</div>
         </div>
     </div>
 
-    <!-- Tela de seleção de horários -->
-    <div id="schedule-container" style="display:none;">
-        <h2>Escolha um Horário</h2>
-        <input type="date" id="date-picker" class="date-picker">
-        <div class="container">
-            <h2>Horários Disponíveis</h2>
-            <div id="available-times" class="times-container"></div>
-            <h2>Horários Reservados</h2>
-            <div id="reserved-times" class="times-container"></div>
+    <!-- Seção de agendamento -->
+    <div id="schedule-section" class="container" style="display: none;">
+        <h2>Agendar Horário para o Serviço: <span id="chosen-service-name"></span></h2>
+
+        <!-- Botão de Voltar e Caixa de Data empilhados -->
+        <div class="button-container">
+            <button id="back-button" onclick="goBack()">Voltar para a Seleção de Serviços</button>
+            <input type="date" id="date-picker" class="date-picker">
+        </div>
+
+        <div class="times-container" id="available-times"></div>
+
+        <h3>Horários Reservados</h3>
+        <div class="times-container" id="reserved-times"></div>
+
+        <div id="overlay"></div>
+        <div id="popup">
+            <h2>Confirmar Reserva</h2>
+            <p id="selected-time"></p>
+            <form id="booking-form">
+                <input type="text" id="name" name="name" placeholder="Seu nome" required>
+                <input type="hidden" id="datetime" name="datetime">
+                <input type="hidden" id="service" name="service">
+                <button type="submit">Confirmar</button>
+            </form>
         </div>
     </div>
 
-    <div id="overlay"></div>
-    <div id="popup">
-        <h2>Confirmar Reserva</h2>
-        <p id="selected-time"></p>
-        <form id="booking-form">
-            <input type="text" id="name" name="name" placeholder="Seu nome" required>
-            <input type="hidden" id="datetime" name="datetime">
-            <input type="hidden" id="service" name="service">
-            <button type="submit">Confirmar</button>
-        </form>
-    </div>
+    <script>
+        let chosenService = '';
+        let servicePrice = '';
+        let serviceImage = '';
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
+        function chooseService(service, price, image) {
+            chosenService = service;
+            servicePrice = price;
+            serviceImage = image;
+            document.getElementById('chosen-service-name').innerText = service.charAt(0).toUpperCase() + service.slice(1);
+            document.getElementById('schedule-section').style.display = 'block';
+            document.querySelector('.container').style.display = 'none';
+            fetchAvailableTimes();
+        }
+
+        function goBack() {
+            // Exibe a seção de seleção de serviços novamente e esconde a seção de agendamento
+            document.getElementById('schedule-section').style.display = 'none';
+            document.querySelector('.container').style.display = 'block';
+        }
+
+        function fetchAvailableTimes() {
+            const date = document.getElementById('date-picker').value;
+            fetch(`/available_slots?date=${date}`)
+                .then(response => response.json())
+                .then(data => updateTimes(data));
+        }
+
+        function updateTimes(data) {
+            const availableContainer = document.getElementById('available-times');
+            availableContainer.innerHTML = '';
+            data.available_slots.forEach(time => {
+                const card = createCard(time, false);
+                availableContainer.appendChild(card);
+            });
+
+            const reservedContainer = document.getElementById('reserved-times');
+            reservedContainer.innerHTML = '';
+            data.reserved_slots.forEach(time => {
+                const card = createCard(time, true);
+                reservedContainer.appendChild(card);
+            });
+        }
+
+        function createCard(time, reserved) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            if (reserved) {
+                card.classList.add('reserved-card');
+                card.innerText = `Reservado: ${time}`;
+            } else {
+                card.innerText = time;
+                card.onclick = () => showPopup(time);
+            }
+            return card;
+        }
+
+        function showPopup(time) {
+            document.getElementById('selected-time').innerText = `Hora Selecionada: ${time}`;
+            document.getElementById('datetime').value = `${document.getElementById('date-picker').value} ${time}`;
+            document.getElementById('service').value = chosenService;
+            document.getElementById('popup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        document.getElementById('overlay').onclick = function () {
+            closePopup();
+        };
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        document.getElementById('booking-form').onsubmit = function (event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            fetch('/book', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        closePopup();
+                        fetchAvailableTimes();
+                    } else {
+                        alert(data.message || 'Erro ao confirmar a reserva.');
+                    }
+                });
+        };
+
+        document.getElementById('date-picker').onchange = function () {
+            fetchAvailableTimes();
+        };
+
+        // Inicializar o datepicker com a data atual
+        document.getElementById('date-picker').value = new Date().toISOString().split('T')[0];
+    </script>
 </body>
+
 </html>

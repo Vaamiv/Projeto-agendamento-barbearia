@@ -1,32 +1,33 @@
 body {
     font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 0;
-    padding: 20px;
-    background-color: #f0f0f5;
-}
-
-h1 {
     text-align: center;
+    background-color: #f0f0f5;
+    padding: 20px;
+    margin: 0;
 }
 
-#services-container, #schedule-container {
-    width: 100%;
-    max-width: 600px;
+h1, h2 {
+    color: #333;
 }
 
 .service-card {
     display: flex;
     align-items: center;
-    margin: 10px 0;
-    padding: 20px;
+    justify-content: space-between;
     border: 1px solid #ccc;
     border-radius: 10px;
-    background-color: #fff;
+    padding: 10px;
+    margin: 10px auto;
     cursor: pointer;
     transition: background-color 0.3s;
+    max-width: 400px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center; /* Centraliza o texto */
+}
+
+.service-card:hover {
+    background-color: #e0e0e0;
 }
 
 .service-card img {
@@ -35,18 +36,55 @@ h1 {
     margin-right: 10px;
 }
 
-.service-card:hover {
-    background-color: #e0e0e0;
+.service-card div {
+    text-align: center; /* Centraliza o texto dentro do card */
+    flex-grow: 1;
 }
 
-.date-picker {
-    margin: 20px;
+.service-card h3 {
+    margin: 0;
+}
+
+.service-card p {
+    margin: 5px 0 0;
+    color: #555;
+}
+
+.service-card .price {
+    text-align: right; /* Alinha o preço à direita */
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#back-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+#back-button:hover {
+    background-color: #0056b3;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 .times-container {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     width: 100%;
     max-height: 400px;
     overflow-y: auto;
@@ -101,4 +139,115 @@ h1 {
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     z-index: 999;
+}
+
+@media (max-width: 600px) {
+    .service-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .service-card img {
+        margin: 0 0 10px;
+    }
+
+    .service-card .price {
+        text-align: left;
+        margin-top: 5px;
+    }
+
+    .card {
+        padding: 15px;
+        width: 100%;
+    }
+
+    .times-container {
+        max-height: 300px;
+    }
+
+    #popup {
+        width: 80%;
+    }
+}
+
+/* Estilo geral da container de serviços */
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Estilo do card de serviço */
+.service-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 600px;
+    margin: 10px 0;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.service-card:hover {
+    transform: scale(1.02);
+}
+
+/* Estilo para a imagem do serviço (esquerda) */
+.service-image img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+/* Estilo para o conteúdo do serviço (nome e descrição) */
+.service-info {
+    flex: 1;
+    margin-left: 20px;
+    text-align: center;
+}
+
+.service-info h3 {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.service-info p {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Estilo para o preço (direita) */
+.price {
+    font-size: 18px;
+    font-weight: bold;
+    color: #007BFF;
+    text-align: right;
+}
+
+#schedule-section .button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px; /* Espaçamento entre o botão e o campo de data */
+}
+
+#back-button {
+    margin-bottom: 10px; /* Espaçamento entre o botão e o campo de data */
+}
+
+.date-picker {
+    margin-top: 10px;
 }

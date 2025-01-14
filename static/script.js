@@ -1,10 +1,12 @@
 function selectService(serviceName, image, price) {
-    // Store selected service information
     document.getElementById('service').value = serviceName;
-    
-    // Hide the services container and show the schedule container
     document.getElementById('services-container').style.display = 'none';
     document.getElementById('schedule-container').style.display = 'block';
+}
+
+function goBackToServices() {
+    document.getElementById('schedule-container').style.display = 'none';
+    document.getElementById('services-container').style.display = 'block';
 }
 
 function fetchAvailableTimes(date) {
