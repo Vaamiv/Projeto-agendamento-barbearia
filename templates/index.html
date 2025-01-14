@@ -8,15 +8,58 @@
 </head>
 <body>
 
-    <h1>Agendamento de Horários</h1>
-    <input type="date" id="date-picker" class="date-picker">
+    <h1>Agendamento de Serviços</h1>
 
-    <div class="container">
-        <h2>Horários Disponíveis</h2>
-        <div id="available-times" class="times-container"></div>
+    <!-- Tela de seleção de serviços -->
+    <div id="services-container">
+        <h2>Escolha um Serviço</h2>
+        <div class="service-card" onclick="selectService('Barba', 'barba.jpg', 30)">
+            <img src="{{ url_for('static', filename='barba.jpg') }}" alt="Barba">
+            <div>
+                <h3>Barba</h3>
+                <p>R$30,00</p>
+            </div>
+        </div>
+        <div class="service-card" onclick="selectService('Cabelo', 'cabelo.jpg', 50)">
+            <img src="{{ url_for('static', filename='cabelo.jpg') }}" alt="Cabelo">
+            <div>
+                <h3>Cabelo</h3>
+                <p>R$50,00</p>
+            </div>
+        </div>
+        <div class="service-card" onclick="selectService('Cabelo + Barba', 'cabelo_barba.jpg', 70)">
+            <img src="{{ url_for('static', filename='cabelo_barba.jpg') }}" alt="Cabelo + Barba">
+            <div>
+                <h3>Cabelo + Barba</h3>
+                <p>R$70,00</p>
+            </div>
+        </div>
+        <div class="service-card" onclick="selectService('Sobrancelha', 'sobrancelha.jpg', 20)">
+            <img src="{{ url_for('static', filename='sobrancelha.jpg') }}" alt="Sobrancelha">
+            <div>
+                <h3>Sobrancelha</h3>
+                <p>R$20,00</p>
+            </div>
+        </div>
+        <div class="service-card" onclick="selectService('Serviço Completo', 'servico_completo.jpg', 100)">
+            <img src="{{ url_for('static', filename='servico_completo.jpg') }}" alt="Serviço Completo">
+            <div>
+                <h3>Serviço Completo</h3>
+                <p>R$100,00</p>
+            </div>
+        </div>
+    </div>
 
-        <h2>Horários Reservados</h2>
-        <div id="reserved-times" class="times-container"></div>
+    <!-- Tela de seleção de horários -->
+    <div id="schedule-container" style="display:none;">
+        <h2>Escolha um Horário</h2>
+        <input type="date" id="date-picker" class="date-picker">
+        <div class="container">
+            <h2>Horários Disponíveis</h2>
+            <div id="available-times" class="times-container"></div>
+            <h2>Horários Reservados</h2>
+            <div id="reserved-times" class="times-container"></div>
+        </div>
     </div>
 
     <div id="overlay"></div>
@@ -26,6 +69,7 @@
         <form id="booking-form">
             <input type="text" id="name" name="name" placeholder="Seu nome" required>
             <input type="hidden" id="datetime" name="datetime">
+            <input type="hidden" id="service" name="service">
             <button type="submit">Confirmar</button>
         </form>
     </div>

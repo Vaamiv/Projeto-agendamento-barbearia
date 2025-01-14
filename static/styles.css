@@ -8,12 +8,35 @@ body {
     background-color: #f0f0f5;
 }
 
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+h1 {
+    text-align: center;
+}
+
+#services-container, #schedule-container {
     width: 100%;
     max-width: 600px;
+}
+
+.service-card {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.service-card img {
+    width: 50px;
+    height: 50px;
+    margin-right: 10px;
+}
+
+.service-card:hover {
+    background-color: #e0e0e0;
 }
 
 .date-picker {
@@ -78,19 +101,4 @@ body {
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
     z-index: 999;
-}
-
-@media (max-width: 600px) {
-    .card {
-        padding: 15px;
-        width: 100%;
-    }
-
-    .times-container {
-        max-height: 300px;
-    }
-
-    #popup {
-        width: 80%;
-    }
 }
