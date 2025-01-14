@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamento de Barbearia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f5;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .date-picker {
+            margin: 20px;
+        }
+
+        .times-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            padding: 10px;
+        }
+
+        .card {
+            margin: 10px 0;
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+            cursor: pointer;
+            width: 90%;
+            background-color: #fff;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            background-color: #e0e0e0;
+        }
+
+        .reserved-card {
+            background-color: #ffc1c1;
+        }
+
+        #popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                padding: 15px;
+                width: 100%;
+            }
+
+            .times-container {
+                max-height: 300px;
+            }
+
+            #popup {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Agendamento de Horários</h1>
+    <input type="date" id="date-picker" class="date-picker">
+
+    <div class="container">
+        <h2>Horários Disponíveis</h2>
+        <div id="available-times" class="times-container"></div>
+
+        <h2>Horários Reservados</h2>
+        <div id="reserved-times" class="times-container"></div>
+    </div>
+
+    <div id="overlay"></div>
+    <div id="popup">
+        <h2>Confirmar Reserva</h2>
+        <p id="selected-time"></p>
+        <form id="booking-form">
+            <input type="text" id="name" name="name" placeholder="Seu nome" required>
+            <input type="hidden" id="datetime" name="datetime">
+            <button type="submit">Confirmar</button>
+        </form>
+    </div>
+
+    <script>
+        function fetchAvailableTimes(date) {
+            fetch(`/available_slots?date=${date}`)
+                .then(response => response.json())
+                .then(data => updateTimes(data));
+        }
+
+        function updateTimes(data) {
+            const availableContainer = document.getElementById('available-times');
+            const reservedContainer = document.getElementById('reserved-times');
+            availableContainer.innerHTML = '';
+            reservedContainer.innerHTML = '';
+
+            data.available_slots.forEach(time => {
+                const card = createCard(time, false);
+                availableContainer.appendChild(card);
+            });
+
+            data.reserved_slots.forEach(time => {
+                const card = createCard(time, true);
+                reservedContainer.appendChild(card);
+            });
+        }
+
+        function createCard(time, reserved) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            if (reserved) {
+                card.classList.add('reserved-card');
+            }
+            card.innerText = time;
+            if (!reserved) {
+                card.onclick = () => showPopup(time);
+            }
+            return card;
+        }
+
+        function showPopup(time) {
+            document.getElementById('selected-time').innerText = `Hora Selecionada: ${time}`;
+            document.getElementById('datetime').value = `${document.getElementById('date-picker').value} ${time}`;
+            document.getElementById('popup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        document.getElementById('overlay').onclick = function() {
+            closePopup();
+        };
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        document.getElementById('booking-form').onsubmit = function(event) {
+            event.preventDefault();
+            const formData = new FormData(this);
+            fetch('/book', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      closePopup();
+                      fetchAvailableTimes(document.getElementById('date-picker').value);
+                  } else {
+                      alert(data.message || 'Erro ao confirmar a reserva.');
+                  }
+              });
+        };
+
+        document.getElementById('date-picker').value = new Date().toISOString().split('T')[0];
+        document.getElementById('date-picker').onchange = function() {
+            fetchAvailableTimes(this.value);
+        };
+
+        fetchAvailableTimes(document.getElementById('date-picker').value);
+    </script>
+</body>
+</html>
